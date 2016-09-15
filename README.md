@@ -38,7 +38,7 @@ The command line options are:
 * **-localmutations** 
 
    Data on the last set of evaluated mutations is saved locally to *mutation_tmp.json*. If the same set of mutations is evaluated twice or more in a row, this option can be activated to use the locally stored data instead of downloading it every time.
-* **-lologfile** 
+* **-nologfile** 
 
    Prevents *log.txt* from being created. 
 * **-nolog** 
