@@ -1,0 +1,17 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+thesis-program/binary_scores.tex
+thesis-program/mutation_tmp.json
+thesis-program/log.txt
+thesis-program/log.txt.lck
+thesis-program/deletions.txt

@@ -1,0 +1,73 @@
+##Values
+	2. variant_summary.txt
+	Generated monthly, the first Thursday of the month
+	A tab-delimited report based on each allele at a location on the genome for which data have been submitted to ClinVar.  
+	The data for the variant are reported again for each assembly, so most variants have a line for GRCh37 (hg19) and GRCh38 (hg38)
+
+	AlleleID               integer value as stored in the AlleleID field in ClinVar  (//Measure/@ID in the XML)
+	Type                   character, the type of variant represented by the AlleleID
+	Name                   character, the preferred name for the record with this AlleleID
+	GeneID                 integer, GeneID in NCBI's Gene database
+	GeneSymbol             character, comma-separated list of GeneIDs overlapping the variant
+	ClinicalSignificance   character, comma-separated list of values of clinical significance reported for this variant
+							 for the mapping between the terms listed here and the integers in the .VCF files, see 
+							 http://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/
+	RS# (dbSNP)            integer, rs# in dbSNP
+	nsv (dbVar)            character, the NSV identifier for the region in dbVar
+	RCVaccession           character, list of RCV accessions that report this variant
+	TestedInGTR            character, Y/N for Yes/No if there is a test registered as specific to this variant in the NIH Genetic Testing Registry (GTR)
+	PhenotypeIDs           character, list of db names and identifiers for phenotype(s) reported for this variant
+	Origin                 character, list of all allelic origins for this variant
+	Assembly               character, name of the assembly on which locations are based  
+	Chromosome             character, chromosomal location
+	Start                  integer, starting location, in pter->qter orientation
+	Stop                   integer, end location, in pter->qter orientation
+	Cytogenetic            character, ISCN band
+	ReviewStatus           character, highest review status for reporting this measure. For the key to the terms, 
+							   and their relationship to the star graphics ClinVar displays on its web pages, 
+							   see http://www.ncbi.nlm.nih.gov/clinvar/docs/variation_report/#interpretation
+	HGVS(c.)               character, RefSeq cDNA-based HGVS expression
+	HGVS(p.)               character, RefSeq protein-based HGVS expression
+	NumberSubmitters       integer, number of submissions with this variant
+	LastEvaluated          datetime, the latest time any submitter reported clinical significance
+	Guidelines             character, ACMG only right now, for the reporting of incidental variation in a Gene 
+								   (NOTE: if ACMG, not a specific to the allele but to the Gene)
+	OtherIDs               character, list of other identifiers or sources of information about this variant
+	VariantID              integer, the value used to build the URL for the current default report, 
+							   e.g. http://www.ncbi.nlm.nih.gov/clinvar/variation/1756/
+	ReferenceAllele        The allele at the location defined by start and stop on the reference sequence
+	AlternateAllele        The difference relative to that reference
+	SubmitterCategories    coded value to indicate whether data were submitted by another resource (1), any other type of source (2) or both (3)
+	ChromosomeAccession    Accession and version of the RefSeq sequence defining the position reported in the start and stop columns. 
+								Please note some of these accessions may be for sub-chromosomal regions.
+
+##Types
+	indel
+	deletion
+	single nucleotide variant
+	duplication
+	insertion
+	NT expansion
+	undetermined variant
+	structural variant
+	inversion
+	copy number gain
+	fusion
+	copy number loss
+	short repeat
+	protein only
+	Translocation
+	complex
+##Clinical Significance
+	Benign	As recommended by ACMG for variants interpreted for Mendelian disorders.
+	Likely benign	As recommended by ACMG for variants interpreted for Mendelian disorders.
+	Uncertain significance	As recommended by ACMG for variants interpreted for Mendelian disorders.
+	Likely pathogenic	As recommended by ACMG for variants interpreted for Mendelian disorders.
+	Pathogenic	As recommended by ACMG for variants interpreted for Mendelian disorders.
+	drug response	A general term for a variant that affects a drug response, not a disease. We anticipate adding more specific drug response terms based on a recommendation by CPIC.
+	association	For variants identified in a GWAS study and further interpreted for their clinical significance.
+	risk factor	For variants that are interpreted not to cause a disorder but to increase the risk.
+	protective	For variants that decrease the risk of a disorder, including infections.
+	Affects	For variants that cause a non-disease phenotype, such as lactose intolerance.
+	conflicting data from submitters	Only for submissions from a consortium, where groups within the consortium have conflicting intepretations of a variant but provide a single submission to ClinVar.
+	other	If ClinVar does not have the appropriate term for your submission, we ask that you submit "other" as clinical significance and contact us to discuss if there are other terms we should add.

@@ -1,0 +1,10 @@
+Intact nodes: 18474
+Biogrid nodes: 12184
+Intersection Nodes: 11089
+Symmetric difference Nodes: 8480
+Union Nodes: 19569
+Intact Edges: 131912
+Biogrid Edges: 64035
+Intersection Edges: 34004
+Symmetric difference Edges: 127939
+Union Edges: 161943

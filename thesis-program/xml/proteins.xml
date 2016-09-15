@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Query>
+<Query  virtualSchemaName = "default" formatter = "TSV" header = "0" uniqueRows = "1" count = "" datasetConfigVersion = "0.6" >
+			
+	<Dataset name = "hsapiens_gene_ensembl" interface = "default" >
+		<Filter name = "uniprot_swissprot" value = "INSERT"/>
+		<Attribute name = "ensembl_transcript_id" />
+		<Attribute name = "uniprot_swissprot" />
+		<Attribute name = "pfam" />
+		<Attribute name = "pfam_start" />
+		<Attribute name = "pfam_end" />
+		<Attribute name = "transcript_length" />
+		<Attribute name = "transcript_biotype" />
+
+	</Dataset>
+</Query>
