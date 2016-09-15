@@ -13,7 +13,7 @@ The command line options are:
 
 * **-m** *\<file\>* 
 
-   File containing RefSNP identifiers (rs#), one per line. Required parameter.
+   File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder.
 * **-c** *\<name\>* 
 
    The classification score used to predict deletions of PPIs. The options are:
