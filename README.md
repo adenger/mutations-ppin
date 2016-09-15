@@ -4,7 +4,7 @@ This program calculates the effects of nsSNPs (non-synonymous single nucleotide 
 
 ## Installation
 
-Clone and import into Eclipse or download the jar and json files from the *jar* folder
+Download the jar and json files from the *jar* folder or clone and import into Eclipse
 
 ## Parameters
 
