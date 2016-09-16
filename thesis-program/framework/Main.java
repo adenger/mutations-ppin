@@ -121,7 +121,7 @@ public class Main {
 				mutationFile.trim().endsWith(".gz") ? new GZIPInputStream(Main.class.getResourceAsStream(mutationFile))
 						: Main.class.getResourceAsStream(mutationFile)))) {
 			String line = "";
-			while ((line = reader.readLine()) != null && mutationIDs.size() < 1000) {
+			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("rs"))
 					mutationIDs.add(line.trim());
 			}
