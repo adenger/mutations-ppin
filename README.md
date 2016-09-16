@@ -55,7 +55,7 @@ To change any settings, the *Settings* class should be used. The settings are:
    Include DOMINE data in the DDI database. Default: *true*
 * **DOMAIN_DATA_NO_PREDICTIONS** 
 
-   Only use experiment-based data. Default: *false*
+   Only use experiment-based data. Default: *true*
 * **DISABLE_LOG**  
 
    Prevent logging system from printing to console. Default: *false*
