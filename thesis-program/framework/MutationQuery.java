@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 public final class MutationQuery {
+	private final static Logger log = Logger.getLogger(MutationQuery.class.getName());
+
 	private final static String server = "http://rest.ensembl.org";
 	private final static String tmpFileName = "/mutation_tmp.json";
 	// for http error 400 try changing these two
@@ -44,6 +47,7 @@ public final class MutationQuery {
 			String postBody = postBodyJoiner.toString();
 			JSONArray mutationData = new JSONArray(sendRequest(postBody, server, ext));
 			mutations.addAll(processMutationData(mutationData));
+			log.info("Number of downloaded mutations: "+mutations.size());
 		}
 		saveLocalJsonObject(mutations);
 		return mutations;
