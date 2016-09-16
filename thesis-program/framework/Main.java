@@ -8,9 +8,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.zip.GZIPInputStream;
 
 public class Main {
@@ -31,15 +34,6 @@ public class Main {
 					ppinFile = args[i + 1];
 					i++;
 					break;
-				case "-c":
-					String c = args[i + 1].toLowerCase();
-					if (c.startsWith("blosum")) {
-						int number = Integer.parseInt(c.substring(6, c.length() - 1));
-						Settings.CLASSIFIER_BLOSUM_MATRIX = BlosumMatrixName.get(number);
-						c = "blosum";
-					}
-					Settings.BINDING_SITE_CLASSIFIER = ClassifierScore.get(c);
-					break;
 				case "-update_ppin":
 					Settings.LOCAL_PROTEIN_DATA = false;
 					break;
@@ -49,8 +43,8 @@ public class Main {
 				case "-nologfile":
 					Settings.DISABLE_LOG_FILE = true;
 					break;
-				case "-nolog":
-					Settings.DISABLE_LOG = true;
+				case "-printlog":
+					Settings.DISABLE_LOG = false;
 					break;
 				}
 			}
@@ -64,9 +58,43 @@ public class Main {
 	public Main(String mutationFile, String ppinFile) {
 		Set<String> mutationIDs = readMutations(mutationFile);
 		Map<String, Set<String>> ppin = readPPIN(ppinFile);
-		Map<Mutation, Map<Protein, Boolean>> results = new MutationEvaluator(ppin, mutationIDs)
-				.getClassifiedInteractionPartners();
-		writeResults(results);
+		MutationEvaluator evaluator = new MutationEvaluator(ppin, mutationIDs);
+		List<String> scores = new LinkedList<String>();
+		Map<Mutation, Map<Protein, List<Boolean>>> outputMap = new HashMap<Mutation, Map<Protein, List<Boolean>>>();
+		getResults(evaluator, scores, outputMap);
+		writeResults(outputMap, scores);
+	}
+
+	private void getResults(MutationEvaluator evaluator, List<String> scores,
+			Map<Mutation, Map<Protein, List<Boolean>>> outputMap) {
+		for (ClassifierScore score : ClassifierScore.values()) {
+			if (!score.isBinaryScore()) {
+				continue;
+			}
+			Settings.BINDING_SITE_CLASSIFIER = score;
+			Map<Mutation, Map<Protein, Boolean>> results = evaluator.getClassifiedInteractionPartners();
+			scores.add(score.toString());
+			for (Entry<Mutation, Map<Protein, Boolean>> resultsEntry : results.entrySet()) {
+				Mutation mutation = resultsEntry.getKey();
+				Map<Protein, Boolean> classifiedProteinInteractors = resultsEntry.getValue();
+				Map<Protein, List<Boolean>> output = outputMap.get(mutation);
+				if (output == null) {
+					output = new HashMap<Protein, List<Boolean>>();
+					outputMap.put(mutation, output);
+				}
+				for (Entry<Protein, Boolean> classifiedProteinInteractorsEntry : classifiedProteinInteractors
+						.entrySet()) {
+					Protein classifiedInteractor = classifiedProteinInteractorsEntry.getKey();
+					Boolean deleted = classifiedProteinInteractorsEntry.getValue();
+					List<Boolean> mappedClassificationsList = output.get(classifiedInteractor);
+					if (mappedClassificationsList == null) {
+						mappedClassificationsList = new LinkedList<Boolean>();
+						output.put(classifiedInteractor, mappedClassificationsList);
+					}
+					mappedClassificationsList.add(deleted);
+				}
+			}
+		}
 	}
 
 	private void addToMap(Map<String, Set<String>> map, String a, String b) {
@@ -123,16 +151,27 @@ public class Main {
 		return ppin;
 	}
 
-	private void writeResults(Map<Mutation, Map<Protein, Boolean>> results) {
+	private void writeResults(Map<Mutation, Map<Protein, List<Boolean>>> outputMap, List<String> scores) {
 		try (BufferedWriter writer = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(new File("deletions.txt"))))) {
-			for (Entry<Mutation, Map<Protein, Boolean>> resultsEntry : results.entrySet()) {
+			StringJoiner header = new StringJoiner("\t", "", "\n").add("Mutation").add("MutatedProtein")
+					.add("InteractingProtein");
+			for (String score : scores) {
+				header.add(score);
+			}
+			writer.write(header.toString());
+			for (Entry<Mutation, Map<Protein, List<Boolean>>> resultsEntry : outputMap.entrySet()) {
 				Mutation mutation = resultsEntry.getKey();
 				String mutID = mutation.getDbSNP(), protID = mutation.getUniprotID();
-				for (Entry<Protein, Boolean> interactorEntry : resultsEntry.getValue().entrySet()) {
-					Integer deleted = interactorEntry.getValue() ? 1 : 0;
-					writer.write(mutID + "\t" + protID + "\t" + interactorEntry.getKey().getUniprotID() + "\t" + deleted
-							+ "\n");
+				for (Entry<Protein, List<Boolean>> interactorEntry : resultsEntry.getValue().entrySet()) {
+					String interactingProteinID = interactorEntry.getKey().getUniprotID();
+					StringJoiner line = new StringJoiner("\t", "", "\n").add(mutID).add(protID)
+							.add(interactingProteinID);
+					for (Boolean deleted : interactorEntry.getValue()) {
+						Integer deletedInt = deleted ? 1 : 0;
+						line.add(deletedInt.toString());
+					}
+					writer.write(line.toString());
 				}
 			}
 		} catch (Exception e) {
