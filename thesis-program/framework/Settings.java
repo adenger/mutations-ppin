@@ -12,7 +12,7 @@ public final class Settings {
 	// Only PDB-based data
 	public static boolean DOMAIN_DATA_NO_PREDICTIONS = true;
 	// logs
-	public static boolean DISABLE_LOG = false;
+	public static boolean DISABLE_LOG = true;
 	public static boolean DISABLE_LOG_FILE = false;
 	// lower bound. higher percentage = more damaging
 	public static double CUTOFF_PERCENTAGE = 0.80d;
