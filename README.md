@@ -13,7 +13,7 @@ The command line options are:
 
 * **-m** *\<file\>* 
 
-   File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder.
+   File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder. Files in the gzip (*.gz) format are supported.
    
 * **-o** *\<file\>* 
 
