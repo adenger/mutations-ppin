@@ -64,7 +64,6 @@ public class MutationEvaluator {
 				log.info("Not able to classify lost protein connections");
 				continue;
 			}
-			log.info("number of classified protein connections: " + classified.size());
 			classifiedInteractions.put(mutation, classified);
 		}
 		return classifiedInteractions;
