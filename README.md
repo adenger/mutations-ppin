@@ -4,7 +4,7 @@ This program calculates the effects of nsSNPs (non-synonymous single nucleotide 
 
 ## Installation
 
-Clone and import into Eclipse or download the jar and json files from the *jar* folder
+Download the jar and json files from the *jar* folder or clone and import into Eclipse
 
 ## Parameters
 
@@ -13,8 +13,22 @@ The command line options are:
 
 * **-m** *\<file\>* 
 
-   File containing RefSNP identifiers (rs#), one per line. Required parameter.
+   File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder.
+* **-c** *\<name\>* 
 
+   The classification score used to predict deletions of PPIs. The options are:
+  * *properties*
+  * *blosum\<number\>* (Availlable numbers are 30,35,40...100. Also 62.)
+  * *polyphen2hc*
+  * *polyphen2*
+  * *sifthc*
+  * *sift*
+  * *null*
+  * *hotspot*
+  * *pshc*
+  * *hpshc*
+  
+   This parameter is optional, the default is *polyphen2hc*
 * **-p** *\<file\>* 
 
    File containing protein-protein interactions, one interaction per line, tab-separated, Uniprot AC format. Optional parameter, otherwise a consensus PPIN (IntAct + BioGRID) is used.
@@ -24,12 +38,12 @@ The command line options are:
 * **-localmutations** 
 
    Data on the last set of evaluated mutations is saved locally to *mutation_tmp.json*. If the same set of mutations is evaluated twice or more in a row, this option can be activated to use the locally stored data instead of downloading it every time.
-* **-lologfile** 
+* **-nologfile** 
 
    Prevents *log.txt* from being created. 
-* **-printlog** 
+* **-nolog** 
 
-   Print output of logging system to the console. Significantly slows down the program, read log.txt instead.
+   Prevents logging system from printing to the console.
 
 ##API Reference
 
