@@ -14,21 +14,7 @@ The command line options are:
 * **-m** *\<file\>* 
 
    File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder.
-* **-c** *\<name\>* 
 
-   The classification score used to predict deletions of PPIs. The options are:
-  * *properties*
-  * *blosum\<number\>* (Availlable numbers are 30,35,40...100. Also 62.)
-  * *polyphen2hc*
-  * *polyphen2*
-  * *sifthc*
-  * *sift*
-  * *null*
-  * *hotspot*
-  * *pshc*
-  * *hpshc*
-  
-   This parameter is optional, the default is *polyphen2hc*
 * **-p** *\<file\>* 
 
    File containing protein-protein interactions, one interaction per line, tab-separated, Uniprot AC format. Optional parameter, otherwise a consensus PPIN (IntAct + BioGRID) is used.
@@ -41,9 +27,9 @@ The command line options are:
 * **-nologfile** 
 
    Prevents *log.txt* from being created. 
-* **-nolog** 
+* **-printlog** 
 
-   Prevents logging system from printing to the console.
+   Print output of logging system to the console. Significantly slows down the program, read log.txt instead.
 
 ##API Reference
 
