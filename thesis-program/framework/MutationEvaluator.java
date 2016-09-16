@@ -58,13 +58,13 @@ public class MutationEvaluator {
 				log.info("affected protein not found in network, skip");
 				continue;
 			}
-			log.info("affected protein is " + protein);
+			log.info("affected protein is " + protein.getUniprotID());
 			Map<Protein, Boolean> classified = classifier.classify(mutation, network, domainInteractions);
 			if (classified == null) {
 				log.info("Not able to classify lost protein connections");
 				continue;
 			}
-			log.info("classified protein connections: " + classified);
+			log.info("number of classified protein connections: " + classified.size());
 			classifiedInteractions.put(mutation, classified);
 		}
 		return classifiedInteractions;
