@@ -23,6 +23,7 @@ public class Main {
 	public static void main(String[] args) {
 		String mutationFile = "";
 		String ppinFile = "";
+		String outputFile = "results.txt";
 		try {
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
@@ -32,6 +33,10 @@ public class Main {
 					break;
 				case "-p":
 					ppinFile = args[i + 1];
+					i++;
+					break;
+				case "-o":
+					outputFile = args[i + 1];
 					i++;
 					break;
 				case "-update_ppin":
@@ -52,17 +57,17 @@ public class Main {
 			e.printStackTrace();
 			System.out.println("Error: Invalid arguments");
 		}
-		new Main(mutationFile, ppinFile);
+		new Main(mutationFile, ppinFile, outputFile);
 	}
 
-	public Main(String mutationFile, String ppinFile) {
+	public Main(String mutationFile, String ppinFile, String outputFile) {
 		Set<String> mutationIDs = readMutations(mutationFile);
 		Map<String, Set<String>> ppin = readPPIN(ppinFile);
 		MutationEvaluator evaluator = new MutationEvaluator(ppin, mutationIDs);
 		List<String> scores = new LinkedList<String>();
 		Map<Mutation, Map<Protein, List<Boolean>>> outputMap = new HashMap<Mutation, Map<Protein, List<Boolean>>>();
 		getResults(evaluator, scores, outputMap);
-		writeResults(outputMap, scores);
+		writeResults(outputMap, scores,outputFile);
 	}
 
 	private void getResults(MutationEvaluator evaluator, List<String> scores,
@@ -151,9 +156,9 @@ public class Main {
 		return ppin;
 	}
 
-	private void writeResults(Map<Mutation, Map<Protein, List<Boolean>>> outputMap, List<String> scores) {
+	private void writeResults(Map<Mutation, Map<Protein, List<Boolean>>> outputMap, List<String> scores, String outputFile) {
 		try (BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(new File("deletions.txt"))))) {
+				new OutputStreamWriter(new FileOutputStream(new File(outputFile))))) {
 			StringJoiner header = new StringJoiner("\t", "", "\n").add("Mutation").add("MutatedProtein")
 					.add("InteractingProtein");
 			for (String score : scores) {

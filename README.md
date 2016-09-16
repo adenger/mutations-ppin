@@ -14,6 +14,10 @@ The command line options are:
 * **-m** *\<file\>* 
 
    File containing RefSNP identifiers (rs#), one per line. Required parameter. Example files can be found in the *exampledata* folder.
+   
+* **-o** *\<file\>* 
+
+   Output file. If not specified, a file named *results.txt* is created.
 
 * **-p** *\<file\>* 
 
