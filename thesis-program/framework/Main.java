@@ -24,6 +24,7 @@ public class Main {
 		String mutationFile = "";
 		String ppinFile = "";
 		String outputFile = "results.txt";
+		Settings.DISABLE_LOG = false;
 		try {
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
@@ -164,9 +165,14 @@ public class Main {
 			for (String score : scores) {
 				header.add(score);
 			}
+			header.add("MutatedDomains");
 			writer.write(header.toString());
 			for (Entry<Mutation, Map<Protein, List<Boolean>>> resultsEntry : outputMap.entrySet()) {
 				Mutation mutation = resultsEntry.getKey();
+				StringJoiner domainsString = new StringJoiner(":");
+				for(String domainID : mutation.getAffectedPfamDomains()){
+					domainsString.add(domainID);
+				}
 				String mutID = mutation.getDbSNP(), protID = mutation.getUniprotID();
 				for (Entry<Protein, List<Boolean>> interactorEntry : resultsEntry.getValue().entrySet()) {
 					String interactingProteinID = interactorEntry.getKey().getUniprotID();
@@ -176,6 +182,7 @@ public class Main {
 						Integer deletedInt = deleted ? 1 : 0;
 						line.add(deletedInt.toString());
 					}
+					line.add(domainsString.toString());
 					writer.write(line.toString());
 				}
 			}
