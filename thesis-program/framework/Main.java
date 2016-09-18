@@ -23,8 +23,7 @@ public class Main {
 	public static void main(String[] args) {
 		String mutationFile = "";
 		String ppinFile = "";
-		String outputFile = "results.txt";
-		Settings.DISABLE_LOG = false;
+		String outputFile = "";
 		try {
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
@@ -68,7 +67,7 @@ public class Main {
 		List<String> scores = new LinkedList<String>();
 		Map<Mutation, Map<Protein, List<Boolean>>> outputMap = new HashMap<Mutation, Map<Protein, List<Boolean>>>();
 		getResults(evaluator, scores, outputMap);
-		writeResults(outputMap, scores,outputFile);
+		writeResults(outputMap, scores, outputFile);
 	}
 
 	private void getResults(MutationEvaluator evaluator, List<String> scores,
@@ -157,7 +156,8 @@ public class Main {
 		return ppin;
 	}
 
-	private void writeResults(Map<Mutation, Map<Protein, List<Boolean>>> outputMap, List<String> scores, String outputFile) {
+	private void writeResults(Map<Mutation, Map<Protein, List<Boolean>>> outputMap, List<String> scores,
+			String outputFile) {
 		try (BufferedWriter writer = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(new File(outputFile))))) {
 			StringJoiner header = new StringJoiner("\t", "", "\n").add("Mutation").add("MutatedProtein")
@@ -165,25 +165,28 @@ public class Main {
 			for (String score : scores) {
 				header.add(score);
 			}
-			header.add("MutatedDomains");
+			header.add("MutatedDomains").add("Polyphen2").add("SIFT").add("Polyphen2-Pred").add("SIFT-Pred")
+					.add("EnsemblGeneID").add("EnsemblTranscriptID").add("ProteinAllele").add("ProteinPosition").add("Consequence");
 			writer.write(header.toString());
 			for (Entry<Mutation, Map<Protein, List<Boolean>>> resultsEntry : outputMap.entrySet()) {
 				Mutation mutation = resultsEntry.getKey();
+				String prefix = mutation.getDbSNP() + "\t" + mutation.getUniprotID();
 				StringJoiner domains = new StringJoiner(":");
-				for(String domainID : mutation.getAffectedPfamDomains()){
+				for (String domainID : mutation.getAffectedPfamDomains()) {
 					domains.add(domainID);
 				}
-				String domainsString = domains.toString();
-				String mutID = mutation.getDbSNP(), protID = mutation.getUniprotID();
+				String suffix = new StringJoiner("\t").add(domains.toString()).add(Double.toString(mutation.getPolyphenScore()))
+						.add(Double.toString(mutation.getSiftScore())).add(mutation.getPolyphenPrediction())
+						.add(mutation.getSiftPrediction()).add(mutation.getGeneID()).add(mutation.getTranscriptID())
+						.add(mutation.getProteinAllele()).add(Long.toString(mutation.getProteinPosition())).add(mutation.getConsequence().toString()).toString();
 				for (Entry<Protein, List<Boolean>> interactorEntry : resultsEntry.getValue().entrySet()) {
 					String interactingProteinID = interactorEntry.getKey().getUniprotID();
-					StringJoiner line = new StringJoiner("\t", "", "\n").add(mutID).add(protID)
-							.add(interactingProteinID);
+					StringJoiner line = new StringJoiner("\t", "", "\n").add(prefix).add(interactingProteinID);
 					for (Boolean deleted : interactorEntry.getValue()) {
 						Integer deletedInt = deleted ? 1 : 0;
 						line.add(deletedInt.toString());
 					}
-					line.add(domainsString.toString());
+					line.add(suffix);
 					writer.write(line.toString());
 				}
 			}
