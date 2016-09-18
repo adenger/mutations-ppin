@@ -45,11 +45,14 @@ public final class MutationQuery {
 				postBodyJoiner.add(iter.next());
 			}
 			String postBody = postBodyJoiner.toString();
-			JSONArray mutationData = new JSONArray(sendRequest(postBody, server, ext));
+			String response = sendRequest(postBody, server, ext);
+			JSONArray mutationData = new JSONArray(response);
 			mutations.addAll(processMutationData(mutationData));
-			log.info("Number of downloaded mutations: "+mutations.size());
+			log.info("Number of downloaded mutations: " + mutations.size());
 		}
+		log.info("Savin Json object");
 		saveLocalJsonObject(mutations);
+		log.info("Returning mutation data: " + mutations.size());
 		return mutations;
 	}
 
@@ -193,9 +196,10 @@ public final class MutationQuery {
 			}
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(response, "UTF-8"))) {
 				StringBuilder builder = new StringBuilder();
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
+				char[] buffer = new char[8192];
+				int read;
+				while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
+					builder.append(buffer, 0, read);
 				}
 				output = builder.toString();
 			} catch (IOException logOrIgnore) {
