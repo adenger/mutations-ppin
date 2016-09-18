@@ -19,9 +19,10 @@ for filename in os.listdir():
 			domains = values[13].strip().split(":")
 			mutationToDomains[mutation] = domains
 			interactions[(mutProt,intProt)][mutation] = clVals
-	print("Number of mutations: "+str(len(mutationToDomains)))
-	print("Number of PPIs: "+str(len(interactions)))
-	print("\nMutP\tIntP\t#Mut\t%PP2\t%SIFT\t%P||s\t%P&&S\tMutD")
+	print("\n###Evaluating file: "+filename+"\n")
+	print("Number of individual mutations: "+str(len(mutationToDomains)))
+	print("Number of PPIs: "+str(len(interactions))+"\n")
+	print("MutP\tIntP\t#Mut\t%PP2\t%SIFT\t%P||s\t%P&&S\tMutD")
 	for (mutProt,intProt),mutations in interactions.items():
 		affectedDomains = set()
 		polyphen2Avg = 0
