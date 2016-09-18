@@ -1,9 +1,10 @@
 import os
 from collections import defaultdict
-mutationToDomains = {}
-interactions = defaultdict(lambda :defaultdict(list))
+stats = ""
 for filename in os.listdir():
-	if not filename.endswith(".txt"):
+	mutationToDomains = {}
+	interactions = defaultdict(lambda :defaultdict(list))
+	if not filename.endswith(".txt") or filename == "stats.txt":
 		continue
 	with open(filename,"r") as file:
 		for line in file:
@@ -19,11 +20,11 @@ for filename in os.listdir():
 			domains = values[13].strip().split(":")
 			mutationToDomains[mutation] = domains
 			interactions[(mutProt,intProt)][mutation] = clVals
-	print("\n###Evaluating file: "+filename+"\n")
-	print("Number of individual mutations: "+str(len(mutationToDomains)))
-	print("Number of PPIs: "+str(len(interactions))+"\n")
-	print("MutP\tIntP\t#Mut\t%PP2\t%SIFT\t%P||s\t%P&&S\tMutD")
-	for (mutProt,intProt),mutations in interactions.items():
+	stats+="###Evaluating file: "+filename+"\n\n"
+	stats+="Number of individual mutations: "+str(len(mutationToDomains))+"\n"
+	stats+="Number of PPIs: "+str(len(interactions))+"\n\n"
+	stats+="MutP\tIntP\t#Mut\t%PP2\t%SIFT\t%P||s\t%P&&S\tMutD\n"
+	for (mutProt,intProt),mutations in sorted(interactions.items()):
 		affectedDomains = set()
 		polyphen2Avg = 0
 		siftAvg = 0
@@ -40,4 +41,8 @@ for filename in os.listdir():
 		siftAvg = round(siftAvg / len(mutations),2)
 		pshcAvg = round(pshcAvg / len(mutations),2)
 		pasAvg = round(pasAvg / len(mutations),2)
-		print(mutProt+"\t"+intProt+"\t"+str(len(mutations))+"\t"+str(polyphen2Avg)+"\t"+str(siftAvg)+"\t"+str(pshcAvg)+"\t"+str(pasAvg)+"\t"+str(affectedDomains))
+		stats+=mutProt+"\t"+intProt+"\t"+str(len(mutations))+"\t"+str(polyphen2Avg)+"\t"+str(siftAvg)+"\t"+str(pshcAvg)+"\t"+str(pasAvg)+"\t"+str(affectedDomains)+"\n"
+	stats+="\n"
+print(stats)
+with open("stats.txt","w") as file:
+	file.write(stats)
