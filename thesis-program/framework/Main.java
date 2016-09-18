@@ -169,10 +169,11 @@ public class Main {
 			writer.write(header.toString());
 			for (Entry<Mutation, Map<Protein, List<Boolean>>> resultsEntry : outputMap.entrySet()) {
 				Mutation mutation = resultsEntry.getKey();
-				StringJoiner domainsString = new StringJoiner(":");
+				StringJoiner domains = new StringJoiner(":");
 				for(String domainID : mutation.getAffectedPfamDomains()){
-					domainsString.add(domainID);
+					domains.add(domainID);
 				}
+				String domainsString = domains.toString();
 				String mutID = mutation.getDbSNP(), protID = mutation.getUniprotID();
 				for (Entry<Protein, List<Boolean>> interactorEntry : resultsEntry.getValue().entrySet()) {
 					String interactingProteinID = interactorEntry.getKey().getUniprotID();
