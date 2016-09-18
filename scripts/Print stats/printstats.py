@@ -1,8 +1,7 @@
 import os
 from collections import defaultdict
-#take protein connections: sort mutations that delete it by number of classfiier values that predicted it 
 mutationToDomains = {}
-interactions = defaultdict(lambda :defaultdict(list)) # uniprot pairs to list of mutation pairs 
+interactions = defaultdict(lambda :defaultdict(list))
 for filename in os.listdir():
 	if not filename.endswith(".txt"):
 		continue
