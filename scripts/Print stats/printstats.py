@@ -3,7 +3,6 @@ from collections import defaultdict
 stats = ""
 for filename in os.listdir():
 	mutationToDomains = {}
-	mutationToScore = {}
 	interactions = defaultdict(lambda :defaultdict(list))
 	if not filename.endswith(".txt") or filename == "stats.txt":
 		continue
@@ -19,8 +18,6 @@ for filename in os.listdir():
 			for i in range(3,13):
 				clVals.append(values[i])
 			domains = values[13].strip().split(":")
-			score = (float(values[14]) + 1 - float(values[15]))/2
-			mutationToScore[mutation] = score
 			mutationToDomains[mutation] = domains
 			interactions[(mutProt,intProt)][mutation] = clVals
 	stats+="###Evaluating file: "+filename+"\n\n"
@@ -33,7 +30,6 @@ for filename in os.listdir():
 		siftAvg = 0
 		pshcAvg = 0
 		pasAvg = 0
-		mostDeleterious = []
 		for id,clVal in mutations.items():
 			polyphen2Avg += int(clVal[2])
 			siftAvg += int(clVal[4])
@@ -41,14 +37,10 @@ for filename in os.listdir():
 			pasAvg += 1 if (clVal[2] == "1" and clVal[4] == "1") else  0
 			for domain in mutationToDomains[id]:
 				affectedDomains.add(domain)
-			mostDeleterious.append(id)
 		polyphen2Avg = round(polyphen2Avg / len(mutations),2)
 		siftAvg = round(siftAvg / len(mutations),2)
 		pshcAvg = round(pshcAvg / len(mutations),2)
 		pasAvg = round(pasAvg / len(mutations),2)
-		print("#########")
-		for k in sorted(mostDeleterious,key=lambda x : mutationToScore[x],reverse=True):
-			print(k + " "+str(mutationToScore[k])) # TODO use this to append it to stats
 		stats+=mutProt+"\t"+intProt+"\t"+str(len(mutations))+"\t"+str(polyphen2Avg)+"\t"+str(siftAvg)+"\t"+str(pshcAvg)+"\t"+str(pasAvg)+"\t"+str(affectedDomains)+"\n"
 	stats+="\n"
 print(stats)
