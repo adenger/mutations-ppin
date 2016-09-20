@@ -1,5 +1,4 @@
 import os
-import operator
 from collections import defaultdict
 def readFile(filename,mutationToScore,mutationToDomains,interactions):
 	with open(filename,"r") as file:
@@ -42,19 +41,6 @@ def getDomainString(mutations,mutationToDomains):
 	for domain in sorted(affectedDomains):
 		domainString += domain+","
 	return domainString[:-1]
-def getMostDeleteriousMutations(mutations,mutationToScore,mutationToDomains):
-	mutationIDs = []
-	for id,clVal in mutations.items():	
-		mutationIDs.append(id)
-	mutationCount = 3
-	mutationString = ""
-	for k in sorted(mutationIDs,key=lambda x : mutationToScore[x],reverse=True):
-		if mutationCount == 0:
-			break
-		domains = mutationToDomains[k]
-		mutationString+= k +","+str(domains)+","+str(mutationToScore[k])+"\t"
-		mutationCount -=1
-	return mutationString
 def processPPI(mutProt,intProt,mutations,mutationToDomains):
 	percentages = getDeleteriousPercentages(mutations)
 	polyphen2Avg = percentages[0]
@@ -70,12 +56,11 @@ def writeFile(stats):
 def processMutations(mutationToScore,mutationToDomains):
 	mutationString = ""
 	count = 10
-	for id,score in sorted (mutationToScore.items(), key=operator.itemgetter(1),reverse=True):
+	for id,score in sorted (mutationToScore.items(), key=lambda x: x[1],reverse=True):
 		for domain in mutationToDomains[id]:
 			mutationString+=domain+"\t"+id+"\t"+str(score)+"\n"
 		if score < 1:
-			break
-		
+			break	
 	return mutationString
 def main():
 	stats = ""
