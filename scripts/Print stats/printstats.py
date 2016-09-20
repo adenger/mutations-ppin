@@ -47,9 +47,9 @@ for filename in os.listdir():
 		pshcAvg = round(pshcAvg / len(mutations),2)
 		pasAvg = round(pasAvg / len(mutations),2)
 		print("#########")
-		for k in sorted(mostDeleterious,key=lambda x : mutationToScore[x],reverse=True):
-			print(k + " "+str(mutationToScore[k])) # TODO use this to append it to stats
-		stats+=mutProt+"\t"+intProt+"\t"+str(len(mutations))+"\t"+str(polyphen2Avg)+"\t"+str(siftAvg)+"\t"+str(pshcAvg)+"\t"+str(pasAvg)+"\t"+str(affectedDomains)+"\n"
+		#for k in sorted(mostDeleterious,key=lambda x : mutationToScore[x],reverse=True):
+			#print(k + " "+str(mutationToScore[k])) # TODO use this to append it to stats
+		stats+=mutProt+"\t"+intProt+"\t"+str(len(mutations))+"\t"+str(polyphen2Avg)+"\t"+str(siftAvg)+"\t"+str(pshcAvg)+"\t"+str(pasAvg)+"\t"+str(sorted(affectedDomains))+"\n"
 	stats+="\n"
 print(stats)
 with open("stats.txt","w") as file:
