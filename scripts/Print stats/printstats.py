@@ -54,13 +54,16 @@ def writeFile(stats):
 	with open("stats.txt","w") as file:
 		file.write(stats)
 def processMutations(mutationToScore,mutationToDomains):
+	domainToMutations = defaultdict(set)
 	mutationString = ""
-	count = 10
 	for id,score in sorted (mutationToScore.items(), key=lambda x: x[1],reverse=True):
-		for domain in mutationToDomains[id]:
-			mutationString+=domain+"\t"+id+"\t"+str(score)+"\n"
 		if score < 1:
 			break	
+		for domain in mutationToDomains[id]:
+			domainToMutations[domain].add(id+"\t"+str(score))
+	for domain,strings in sorted(domainToMutations.items()):
+		for string in sorted(strings):
+			mutationString += domain +"\t"+ string+ "\n"
 	return mutationString
 def main():
 	stats = ""
@@ -77,7 +80,7 @@ def main():
 		stats+="MutP\tIntP\t#Mut\t%PP2\t%SIFT\t%P||s\t%P&&S\tMutD\n"
 		for (mutProt,intProt),mutations in sorted(interactions.items()):
 			stats += processPPI(mutProt,intProt,mutations,mutationToDomains)
-		stats+="\nDomain\tMutation\tScore\n"
+		stats+="\nMutations with highest score:\n\nDomain\tMutation\tScore\n"
 		stats += processMutations(mutationToScore,mutationToDomains)+ "\n"
 	writeFile(stats)
 main()
