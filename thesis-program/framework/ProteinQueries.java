@@ -20,7 +20,7 @@ public final class ProteinQueries {
 	private final static String tmpFileName = "/protein_tmp.json";
 
 	public static Set<Protein> getProteinData(Set<String> proteinIDs) {
-		if (Settings.LOCAL_PROTEIN_DATA)
+		if (Settings.LOCAL_PROTEIN_DATA())
 			return restoreFromLocalTmp(proteinIDs);
 		String xml = BiomartXmlHandler.getProteinsXML(proteinIDs);
 		List<String[]> results = BiomartQuery.sendBiomartQuery(xml);

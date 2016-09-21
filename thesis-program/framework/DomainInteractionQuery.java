@@ -20,13 +20,13 @@ public class DomainInteractionQuery {
 	private static final String file3did = "/data/3did_flat.gz";
 
 	public static Map<String, Set<String>> getInteractions() {
-		if (Settings.DOMAIN_DATA_3DID)
+		if (Settings.DOMAIN_DATA_3DID())
 			read3did();
-		if (Settings.DOMAIN_DATA_DOMINE)
+		if (Settings.DOMAIN_DATA_DOMINE())
 			readDomine();
-		if (Settings.DOMAIN_DATA_IPFAM)
+		if (Settings.DOMAIN_DATA_IPFAM())
 			readIpfam();
-		if (Settings.DOMAIN_DATA_IDDI)
+		if (Settings.DOMAIN_DATA_IDDI())
 			readIddi();
 		return interactions;
 	}
@@ -75,7 +75,7 @@ public class DomainInteractionQuery {
 			while ((line = reader.readLine()) != null) {
 				String[] values = line.split("\\|");
 				String confidence = values[values.length - 2];
-				if (Settings.DOMAIN_DATA_NO_PREDICTIONS ? confidence.equals("NA")
+				if (Settings.DOMAIN_DATA_NO_PREDICTIONS() ? confidence.equals("NA")
 						: confidence.equals("NA") || confidence.equals("HC")) {
 					String idA = values[0];
 					String idB = values[1];
@@ -98,7 +98,7 @@ public class DomainInteractionQuery {
 					continue;
 				String[] values = line.split("\t");
 				double score = Double.parseDouble(values[values.length - 1]);
-				double threshold = Settings.DOMAIN_DATA_NO_PREDICTIONS ? 0.329d : 0.102d;
+				double threshold = Settings.DOMAIN_DATA_NO_PREDICTIONS() ? 0.329d : 0.102d;
 				if (score >= threshold) {
 					String idA = values[0];
 					String idB = values[1];

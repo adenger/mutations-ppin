@@ -74,9 +74,9 @@ public class MutationEvaluator {
 	}
 
 	private void initializeLogger() {
-		if (Settings.DISABLE_LOG)
+		if (Settings.DISABLE_LOG())
 			LogManager.getLogManager().reset();
-		if (Settings.DISABLE_LOG_FILE)
+		if (Settings.DISABLE_LOG_FILE())
 			return;
 		try {
 			Logger globalLogger = Logger.getLogger("");

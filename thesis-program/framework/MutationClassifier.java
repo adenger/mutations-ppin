@@ -20,7 +20,7 @@ public class MutationClassifier {
 	private ProteinNetwork network;
 	private Map<String, Set<String>> domainInteractions;
 	private Protein protein;
-	private BlosumMatrix matrix = new BlosumMatrix(Settings.CLASSIFIER_BLOSUM_MATRIX);
+	private BlosumMatrix matrix = new BlosumMatrix(Settings.CLASSIFIER_BLOSUM_MATRIX());
 
 	public MutationClassifier() {
 		readPfamToDomainID();
@@ -72,7 +72,7 @@ public class MutationClassifier {
 	}
 
 	private Map<Protein, Boolean> classifyMissense() {
-		log.info("Classifying missense mutation with " + Settings.BINDING_SITE_CLASSIFIER.toString());
+		log.info("Classifying missense mutation with " + Settings.BINDING_SITE_CLASSIFIER().toString());
 		Map<Domain, String> affectedDomains = getAffectedDomains();
 		log.info("Number of affected domains: " + affectedDomains.size());
 		Map<String, Map<String, Boolean>> classifiedDomainConnections = getClassifiedDomainConnections(affectedDomains);
@@ -155,11 +155,11 @@ public class MutationClassifier {
 
 	private boolean getBindingSiteClassification() {
 		char original = mutation.getProteinAllele().charAt(0), mutated = mutation.getProteinAllele().charAt(2);
-		switch (Settings.BINDING_SITE_CLASSIFIER) {
+		switch (Settings.BINDING_SITE_CLASSIFIER()) {
 		case BLOSUM:
 			return matrix.get(original, mutated) < 0;
 		case BLOSUM_PERCENTAGE:
-			return matrix.getPercentage(original, mutated) > Settings.CUTOFF_PERCENTAGE;
+			return matrix.getPercentage(original, mutated) > Settings.CUTOFF_PERCENTAGE();
 		case NULL:
 			return true;
 		case POLYPHEN_2:
@@ -175,9 +175,9 @@ public class MutationClassifier {
 		case HOTSPOT_ENRICHED:
 			return AminoAcidProperties.isHotspotEnriched(original) && getProperties(original, mutated);
 		case POLYPHEN_2_SCORE:
-			return mutation.getPolyphenScore() > Settings.CUTOFF_PERCENTAGE;
+			return mutation.getPolyphenScore() > Settings.CUTOFF_PERCENTAGE();
 		case SIFT_SCORE:
-			return 1 - mutation.getSiftScore() > Settings.CUTOFF_PERCENTAGE;
+			return 1 - mutation.getSiftScore() > Settings.CUTOFF_PERCENTAGE();
 		case PSHC:
 			return mutation.getPolyphenPrediction().equals("probably_damaging")
 					|| mutation.getSiftPrediction().equals("deleterious");

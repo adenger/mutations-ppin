@@ -33,7 +33,7 @@ public final class MutationQuery {
 	private final static int TRANSCRIPT_MAX_POSTSIZE = 1000;
 
 	public static Set<Mutation> getMutations(Set<String> mutationIDs) {
-		if (Settings.LOCAL_MUTATION_DATA) {
+		if (Settings.LOCAL_MUTATION_DATA()) {
 			return restoreFromLocalTmp(mutationIDs);
 		}
 		Set<Mutation> mutations = new HashSet<Mutation>();

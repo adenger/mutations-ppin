@@ -40,16 +40,16 @@ public class Main {
 					i++;
 					break;
 				case "-update_ppin":
-					Settings.LOCAL_PROTEIN_DATA = false;
+					Settings.setLOCAL_PROTEIN_DATA(false);
 					break;
 				case "-localmutations":
-					Settings.LOCAL_MUTATION_DATA = true;
+					Settings.setLOCAL_MUTATION_DATA(true);
 					break;
 				case "-nologfile":
-					Settings.DISABLE_LOG_FILE = true;
+					Settings.setDISABLE_LOG_FILE(true);
 					break;
 				case "-printlog":
-					Settings.DISABLE_LOG = false;
+					Settings.setDISABLE_LOG(false);
 					break;
 				}
 			}
@@ -70,13 +70,24 @@ public class Main {
 		writeResults(outputMap, scores, outputFile);
 	}
 
+	private void addToMap(Map<String, Set<String>> map, String a, String b) {
+		Set<String> mapped = map.get(a);
+		if (mapped == null) {
+			mapped = new HashSet<String>();
+			mapped.add(b);
+			map.put(a, mapped);
+		} else {
+			mapped.add(b);
+		}
+	}
+
 	private void getResults(MutationEvaluator evaluator, List<String> scores,
 			Map<Mutation, Map<Protein, List<Boolean>>> outputMap) {
 		for (ClassifierScore score : ClassifierScore.values()) {
 			if (!score.isBinaryScore()) {
 				continue;
 			}
-			Settings.BINDING_SITE_CLASSIFIER = score;
+			Settings.setBINDING_SITE_CLASSIFIER(score);
 			Map<Mutation, Map<Protein, Boolean>> results = evaluator.getClassifiedInteractionPartners();
 			scores.add(score.toString());
 			for (Entry<Mutation, Map<Protein, Boolean>> resultsEntry : results.entrySet()) {
@@ -99,17 +110,6 @@ public class Main {
 					mappedClassificationsList.add(deleted);
 				}
 			}
-		}
-	}
-
-	private void addToMap(Map<String, Set<String>> map, String a, String b) {
-		Set<String> mapped = map.get(a);
-		if (mapped == null) {
-			mapped = new HashSet<String>();
-			mapped.add(b);
-			map.put(a, mapped);
-		} else {
-			mapped.add(b);
 		}
 	}
 
@@ -166,7 +166,8 @@ public class Main {
 				header.add(score);
 			}
 			header.add("MutatedDomains").add("Polyphen2").add("SIFT").add("Polyphen2-Pred").add("SIFT-Pred")
-					.add("EnsemblGeneID").add("EnsemblTranscriptID").add("ProteinAllele").add("ProteinPosition").add("Consequence");
+					.add("EnsemblGeneID").add("EnsemblTranscriptID").add("ProteinAllele").add("ProteinPosition")
+					.add("Consequence");
 			writer.write(header.toString());
 			for (Entry<Mutation, Map<Protein, List<Boolean>>> resultsEntry : outputMap.entrySet()) {
 				Mutation mutation = resultsEntry.getKey();
@@ -175,10 +176,12 @@ public class Main {
 				for (String domainID : mutation.getAffectedPfamDomains()) {
 					domains.add(domainID);
 				}
-				String suffix = new StringJoiner("\t").add(domains.toString()).add(Double.toString(mutation.getPolyphenScore()))
-						.add(Double.toString(mutation.getSiftScore())).add(mutation.getPolyphenPrediction())
-						.add(mutation.getSiftPrediction()).add(mutation.getGeneID()).add(mutation.getTranscriptID())
-						.add(mutation.getProteinAllele()).add(Long.toString(mutation.getProteinPosition())).add(mutation.getConsequence().toString()).toString();
+				String suffix = new StringJoiner("\t").add(domains.toString())
+						.add(Double.toString(mutation.getPolyphenScore())).add(Double.toString(mutation.getSiftScore()))
+						.add(mutation.getPolyphenPrediction()).add(mutation.getSiftPrediction())
+						.add(mutation.getGeneID()).add(mutation.getTranscriptID()).add(mutation.getProteinAllele())
+						.add(Long.toString(mutation.getProteinPosition())).add(mutation.getConsequence().toString())
+						.toString();
 				for (Entry<Protein, List<Boolean>> interactorEntry : resultsEntry.getValue().entrySet()) {
 					String interactingProteinID = interactorEntry.getKey().getUniprotID();
 					StringJoiner line = new StringJoiner("\t", "", "\n").add(prefix).add(interactingProteinID);

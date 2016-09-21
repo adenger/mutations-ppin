@@ -23,9 +23,9 @@ import framework.Settings;
 
 public class Evaluation {
 	public static void main(String[] args) {
-		Settings.LOCAL_PROTEIN_DATA = true;
-		Settings.LOCAL_MUTATION_DATA = false;
-		Settings.DISABLE_LOG = false;
+		Settings.setLOCAL_PROTEIN_DATA(true);
+		Settings.setLOCAL_MUTATION_DATA(false);
+		Settings.setDISABLE_LOG(false);
 		Evaluation eval = new Evaluation();
 		eval.evaluate();
 	}
@@ -46,7 +46,7 @@ public class Evaluation {
 				"\\begin{tabular*}{\\linewidth}{@{\\extracolsep{\\fill}}lrrrrllll}\n"
 						+ "\\toprule\nClassifier&TP&FP&TN&FN&Prec.&Acc.&Sens.&Spec.\\\\\n\\midrule\n");
 		for (ClassifierScore score : ClassifierScore.values()) {
-			Settings.BINDING_SITE_CLASSIFIER = score;
+			Settings.setBINDING_SITE_CLASSIFIER(score);
 			if (score.isBinaryScore()) {
 				this.evaluateBinary(score, eval, binaryFileBuilder);
 			} else {
