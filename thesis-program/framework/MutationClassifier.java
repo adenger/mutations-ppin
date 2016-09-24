@@ -52,7 +52,6 @@ public class MutationClassifier {
 		this.network = network;
 		this.domainInteractions = domainInteractions;
 		this.protein = protein;
-
 		switch (mutation.getConsequence()) {
 		case FRAMESHIFT:
 			return classifyFrameshift();
@@ -69,6 +68,12 @@ public class MutationClassifier {
 
 	private Map<Protein, Boolean> classifyFrameshift() {
 		return deleteConnectionsAfterMutation();
+	}
+	
+	private void updateBlosum(){
+		if(!(this.matrix.getName().toString().equals(Settings.CLASSIFIER_BLOSUM_MATRIX().toString()))){
+			this.matrix = new BlosumMatrix(Settings.CLASSIFIER_BLOSUM_MATRIX());
+		}
 	}
 
 	private Map<Protein, Boolean> classifyMissense() {
@@ -157,8 +162,10 @@ public class MutationClassifier {
 		char original = mutation.getProteinAllele().charAt(0), mutated = mutation.getProteinAllele().charAt(2);
 		switch (Settings.BINDING_SITE_CLASSIFIER()) {
 		case BLOSUM:
+			updateBlosum();
 			return matrix.get(original, mutated) < 0;
 		case BLOSUM_PERCENTAGE:
+			updateBlosum();
 			return matrix.getPercentage(original, mutated) > Settings.CUTOFF_PERCENTAGE();
 		case NULL:
 			return true;
